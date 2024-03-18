@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Streamer List</title>
+</head>
+<body>
+    <h1>Streamer List</h1>
+    <a href="{% url 'streamer_new' %}">Add New Streamer</a>
+    <ul>
+        {% for streamer in object_list %}
+            <li>
+                <a href="{% url 'get_streamer_by_id' streamer.pk %}">{{ streamer.username }}</a>
+                - {{ streamer.email }} - {{ streamer.balance }}
+            </li>
+        {% empty %}
+            <li>No streamers found.</li>
+        {% endfor %}
+    </ul>
+</body>
+</html>
