@@ -42,7 +42,8 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
-    "game_hub"
+    "game_hub",
+    "djmoney",
 ]
 
 MIDDLEWARE = [
