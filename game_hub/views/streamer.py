@@ -5,7 +5,7 @@ from game_hub.models import Streamer
 # transactions here?
 class GetAllStreamersView(ListView):
     model = Streamer
-    template_name = 'streamers/get_streamers.html'
+    template_name = 'streamers/index.html'
 
 class GetStreamerByIDView(DetailView):
     model = Streamer

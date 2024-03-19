@@ -15,17 +15,9 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path
-from game_hub.views import main, streamer
+from django.urls import include, path
 
 urlpatterns = [
-
-    path('', main.home, name='home'),
-    path("admin/", admin.site.urls),
-
-    path('streamers/', streamer.GetAllStreamersView.as_view(), name='get_streamers'),
-    path('streamers/<int:pk>/', streamer.GetStreamerByIDView.as_view(), name='get_streamer_by_id'),
-    path('streamers/<int:pk>/edit/', streamer.UpdateStreamerView.as_view(), name='streamer_edit'),
-    path('streamers/new/', streamer.CreateStreamerView.as_view(), name='streamer_new'),
-    path('streamers/<int:pk>/delete/', streamer.DeleteStreamerView.as_view(), name='delete_streamer_by_id'),
+    path("", include("game_hub.urls")),
+    path("admin/", admin.site.urls)
 ]

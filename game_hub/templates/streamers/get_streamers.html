@@ -1,20 +1,37 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Streamer List</title>
-</head>
-<body>
-    <h1>Streamer List</h1>
-    <a href="{% url 'streamer_new' %}">Add New Streamer</a>
-    <ul>
-        {% for streamer in object_list %}
-            <li>
-                <a href="{% url 'get_streamer_by_id' streamer.pk %}">{{ streamer.username }}</a>
-                - {{ streamer.email }} - {{ streamer.balance }}
-            </li>
+{% extends 'home.html' %}
+
+{% block content %}
+
+    <h1>Streamer Dashboard</h1>
+
+    <form action="{% url 'streamer_create' %}" method="get">
+        <input class="" type="submit" value="Create New Streamer" />
+    </form>
+
+    <h2>List of Streamers</h2>
+    <table>
+        <tr>
+            <th>Username</th>
+            <th>Email</th>
+            <th>Balance</th>
+            <th>Actions</th>
+        </tr>
+        {% for streamer in streamers %}
+            <tr>
+                <td>{{ streamer.username }}</td>
+                <td>{{ streamer.email }}</td>
+                <td>{{ streamer.balance }}</td>
+                <td>
+                    <a href="{% url 'streamer_detail' streamer.id %}">View</a>
+                    <a href="{% url 'streamer_update' streamer.id %}">Edit</a>
+                    <a href="{% url 'streamer_delete' streamer.id %}">Delete</a>
+                </td>
+            </tr>
         {% empty %}
-            <li>No streamers found.</li>
+            <tr>
+                <td colspan="4">No streamers found.</td>
+            </tr>
         {% endfor %}
-    </ul>
-</body>
-</html>
+    </table>
+
+{% endblock %}
