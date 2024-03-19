@@ -50,6 +50,8 @@ def insertion_protocol(connection, schema_name, data, table_name, column_names):
     with connection.cursor() as cur:
         cur.executemany(insert_query, data)
         connection.commit()
+    black_wall_protocol_EX102(connection, input=None, mutation="Anomaly handler", dates=None, column_names=column_names, table_name=table_name,
+                                                schema=schema_name,type_accpeted=None)
 
 def generate_data_based_on_schema(schema_info, count):
     data = []
