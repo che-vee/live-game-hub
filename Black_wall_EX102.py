@@ -5,6 +5,9 @@ import psycopg2.extensions
 
 def black_wall_protocol_EX102(connection, input, mutation, dates, column_names, table_name, schema, type_accpeted):
     def ice_wall(input, type_accepted):
+        assert(type(input) == list or type(input) == np.ndarray)
+        accpeted_types = [bool, str, int, float]
+        assert(type_accepted in accpeted_types)
         dev_mode = 0
         if dev_mode == 1:
             print("---")
