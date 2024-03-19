@@ -6,21 +6,29 @@ from djmoney.models.fields import MoneyField
 class Streamer(models.Model):
     username = models.CharField(max_length=255, unique=True)
     email = models.EmailField(unique=True)
-    balance = MoneyField(max_digits=10, decimal_places=2, default_currency="USD")
+    balance = MoneyField(max_digits=18, decimal_places=2, default_currency="USD")
 
     created_at = models.DateTimeField(default=timezone.now)
     updated_at = models.DateTimeField(auto_now=True)
 
 
 class Payment(models.Model):
-    amount = MoneyField(max_digits=10, decimal_places=2, default_currency="USD")
+    amount = MoneyField(max_digits=18, decimal_places=2, default_currency="USD")
     source = models.CharField(max_length=255)
     description = models.TextField()
     streamer_id = models.IntegerField()
 
     created_at = models.DateTimeField(default=timezone.now)
     updated_at = models.DateTimeField(auto_now=True)
-
+    # Amount
+    # Payee
+    # Payer
+    # Datetime
+    # Method
+    # Description
+    # Status
+    # Transaction ID
+    # Bill details
 
 class Game(models.Model):
     name = models.CharField(max_length=255)
@@ -33,16 +41,18 @@ class Game(models.Model):
 
 class GameType(models.Model):
     genre = models.CharField(max_length=255)
-    price = MoneyField(max_digits=10, decimal_places=2, default_currency="USD")
+    price = MoneyField(max_digits=18, decimal_places=2, default_currency="USD")
 
     created_at = models.DateTimeField(default=timezone.now)
     updated_at = models.DateTimeField(auto_now=True)
 
 
 class GamePurchase(models.Model):
-    amount = MoneyField(max_digits=10, decimal_places=2, default_currency="USD")
+    amount = MoneyField(max_digits=18, decimal_places=2, default_currency="USD")
     streamer_id = models.IntegerField()
     gametype_id = models.IntegerField()
+    payment_id = models.IntegerField() # link from purchase to payment (how purchase is done)
+
 
     created_at = models.DateTimeField(default=timezone.now)
     updated_at = models.DateTimeField(auto_now=True)
@@ -50,7 +60,7 @@ class GamePurchase(models.Model):
 
 class Session(models.Model):
     streamer_id = models.IntegerField()
-    game_id = models.IntegerField()
+    game_id = models.IntegerField() # gametype?
 
     created_at = models.DateTimeField(default=timezone.now)
     updated_at = models.DateTimeField(auto_now=True)
