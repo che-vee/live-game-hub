@@ -4,6 +4,23 @@ from sqlalchemy.dialects.postgresql import psycopg2
 import psycopg2.extensions
 
 def black_wall_protocol_EX102(connection, input, mutation, dates, column_names, table_name, schema, type_accpeted):
+    def execute_query(connection_params, query):
+        assert(type(query) == str)
+        conn = None
+        try:
+            conn = psycopg2.connect(**connection_params).cursor()
+            conn.execute(query)
+            results = cur.fetchall()
+            cur.close()
+            return results
+        except Exception as e:
+            print(f"An error occurred: {e}")
+            return []
+
+        finally:
+            if conn is not closed:
+                conn.close()
+    
     def ice_wall(input, type_accepted):
         assert(type(input) == list or type(input) == np.ndarray)
         accpeted_types = [bool, str, int, float]
@@ -56,8 +73,8 @@ def black_wall_protocol_EX102(connection, input, mutation, dates, column_names, 
 
         post_cleaning_output = ice_wall(input, type_accpeted)
         return post_cleaning_output
-    #Database anomaly clearing
-    if mutation == "Anomaly handler":
+        #Database anomaly clearing
+        if mutation == "Anomaly handler":
         cur = connection.cursor()
         clear_to_process = 0
         if table_name != None and column_names != None and schema != None:
@@ -65,6 +82,8 @@ def black_wall_protocol_EX102(connection, input, mutation, dates, column_names, 
 
         if clear_to_process == 1:
             try:
+                # Winning number:
+                experimentation_method = 2
                 # Set the database isolation level
                 level_selected = 1
                 # Isolation protocols
@@ -74,14 +93,33 @@ def black_wall_protocol_EX102(connection, input, mutation, dates, column_names, 
 
                 isolation_level = protocols[level_selected]
                 connection.set_isolation_level(isolation_level)
+                if experimentation_method == 0:
+                    for column in column_names:
+                        cur.execute(f"SELECT {column} FROM {schema}.{table_name};")
+                elif experimentation_method == 1:
+                    columns = ', '.join(column_names)
+                    query = f"SELECT {columns} FROM {schema}.{table_name};"
+                    cur.execute(query)
+                elif experimentation_method == 2:
+                    queries = [f"SELECT {column} FROM {schema}.{table_name};" for column in
+                               column_names]  # List of queries
 
-                for column in column_names:
-                    cur.execute(f"SELECT {column} FROM {schema}.{table_name};")
+                    # Use ThreadPoolExecutor to execute queries in parallel
+                    with ThreadPoolExecutor(max_workers=len(queries)) as executor:
+                        future_to_query = {executor.submit(execute_query, connection, query): query for query in
+                                           queries}
+
+                        for future in as_completed(future_to_query):
+                            query = future_to_query[future]
+                            try:
+                                data = future.result()
+
+                            except Exception as exc:
+                                print(f'{query} generated an exception: {exc}')
+
             except:
                 # Rollback in the event of failure
                 connection.rollback()
-
-
     # Data
     #If there is machine learning then add pre-processing protocols here
     #ML preprocessing ------------------
