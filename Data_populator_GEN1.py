@@ -55,11 +55,11 @@ def generate_data_based_on_schema(schema_info, count):
     return list(map(list, zip(*data)))
 
 def connect():
-    conn = psycopg2.connect(database="postgres",
-                            user="vaschetomy",
-                            password="SecurePassword",
-                            host="database-1.c32ikym4q9dx.ap-southeast-1.rds.amazonaws.com",
-                            port="5432")
+    conn = psycopg2.connect(database=input("Database type: "),
+                            user=input("User: "),
+                            password=input("Password: "),
+                            host=input("Host: "),
+                            port=int(input("Port: ")))
     return conn
 
 # Behavior modifiers
