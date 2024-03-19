@@ -8,14 +8,36 @@
 </head>
 <body>
     <header>
+        <nav>
+            <div class="nav-wrapper">
+              <a href="/" class="brand-logo right">Home</a>
+              <ul id="nav-mobile" class="left hide-on-med-and-down">
+                <li><a href="{% url 'streamers' %}">Streamers</a></li>
+                <li><a href="{% url 'purchases' %}">Purchases</a></li>
+              </ul>
+            </div>
+          </nav>
     </header>
+
+    {% if messages %}
+    <div class="card-panel teal">
+        {% for message in messages %}
+        <div class="alert {% if message.tags %}alert-{{ message.tags }}{% endif %}">
+            {{ message }}
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
 
     {% block content %}
 
-    <h1>Welcome to Game Hub</h1>
-    <p><a href="{% url 'get_streamers' %}" class="btn-small">View Streamers</a></p>
+    <div class="container">
+        <h1>Welcome to Game Hub</h1>
+        
+    </div>
 
     {% endblock %}
+
     <footer>
     </footer>
 
