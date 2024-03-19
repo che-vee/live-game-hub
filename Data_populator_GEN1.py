@@ -38,9 +38,7 @@ def insertion_protocol(connection, schema_name, data, table_name, column_names):
     columns_sql = ', '.join(column_names)
     placeholders = ', '.join(['%s'] * len(column_names))
     insert_query = f"INSERT INTO {schema_name}.{table_name} ({columns_sql}) VALUES ({placeholders})"
-    # Black wall applying anomaly handling
-    black_wall_protocol_EX102(connection, input=None, mutation="Anomaly handler", dates=None, column_names=column_names, table_name=table_name,
-                                                schema=schema_name,type_accpeted=None)
+    
     with connection.cursor() as cur:
         cur.executemany(insert_query, data)
         connection.commit()
