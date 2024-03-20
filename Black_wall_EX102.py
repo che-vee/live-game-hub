@@ -83,7 +83,7 @@ def black_wall_protocol_EX102(connection, input, mutation, dates, column_names, 
         if clear_to_process == 1:
             try:
                 # Winning number:
-                experimentation_method = 2
+                experimentation_method = 1
                 # Set the database isolation level
                 level_selected = 1
                 # Isolation protocols
