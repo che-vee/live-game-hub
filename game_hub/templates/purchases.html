@@ -1,0 +1,32 @@
+{% extends 'home.html' %}
+
+{% block content %}
+
+<div class="container">
+    <h2>List of Purchases</h2>
+    <table>
+        <tr>
+            <th>Amount</th>
+            <th>Streamer</th>
+            <th>GameType</th>
+        </tr>
+        {% for purchase in purchases %}
+            {% if forloop.counter <= 10 %}
+                <tr>
+                    <td>{{ purchase.amount }}</td>
+                    <td>{{ purchase.streamer_id }}</td>
+                    <td>{{ purchase.gametype_id }}</td>
+                    <!-- <td>{{ purchase.payment_id }}</td> -->
+                </tr>
+            {% endif %}
+        {% empty %}
+            <tr>
+                <td colspan="3">No purchases found.</td>
+            </tr>
+        {% endfor %}
+    </table>
+
+    <span>Total purchases: {{ purchases|length }}</span>
+</div>
+
+{% endblock %}
