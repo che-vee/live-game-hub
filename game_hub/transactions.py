@@ -4,7 +4,7 @@ from .models import *
 from djmoney.money import Money
 
 @transaction.atomic
-def streamer_purchase_game(request, streamer_id, gametype_id):
+def streamer_purchase_game(request, streamer_id, gametype_id, source='spend of money from balance', description='generated desc'):
     streamer = Streamer.objects.select_for_update().get(pk=streamer_id)
     game_type = GameType.objects.get(pk=gametype_id)
     game_price = game_type.price
@@ -14,11 +14,11 @@ def streamer_purchase_game(request, streamer_id, gametype_id):
 
     payment = Payment.objects.create(
         amount=game_price,
-        source='some source',
-        description='generated desc',
+        source=source,
+        description=description,
         streamer_id=streamer_id
     )
-
+    
     GamePurchase.objects.create(
         amount=game_price, 
         streamer_id=streamer_id, 
