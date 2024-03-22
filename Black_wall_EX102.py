@@ -54,8 +54,9 @@ def black_wall_protocol_EX102(connection, input, mutation, dates, column_names, 
 
     compatible_mutations = ["Modular clearance", "S-Sync", "Anomaly handler",
                             "ML preprocessing", "DB-sync"]
-    if mutation not in compatible_mutations:
+        if mutation not in compatible_mutations:
         return "Mutation protocol does not exist"
+
     #synchronizer if compatible ------------------
     if mutation == "Sync" and len(input) > 0 and dates > 0:
         assert(type(input) == list or type(input) == np.ndarray)
@@ -64,17 +65,46 @@ def black_wall_protocol_EX102(connection, input, mutation, dates, column_names, 
             input = np.array(input)
 
         if dormant_status == 1:
-            return input, dates
+            return 0, 0
+        # Add synchronizing script here
+
+        if dormant_status == 0:
+            synced_dates = []
+            synced_data = []
+            return synced_data, synced_dates
+    # DB-sync ---------------
+    elif mutation == "DB-sync" and table_name != None and column_names != None and schema != None:
+        dormant_state_DB_sync = 1
+        if dormant_state_DB_sync == 1:
+            return 0
+        # Overwrite  missing integers with zero, strings with empty string
+        connection = connection.cursor()
+        column_scanner = f"""
+        SELECT column_name
+        FROM information_schema.columns
+        WHERE table_schema = '{schema}'
+        AND table_name = '{table_name}'
+        AND data_type LIKE '%char%'
+        AND column_name NOT LIKE '%ID%'
+        ORDER BY ordinal_position """
+
+        connection.execute(column_scanner)
+        result = connection.fetchone()
+        first_str_column = result[0] if result else None
+        if first_str_column != None:
+            fetch_query = f"SELECT * FROM {schema}.{table_name} ORDER BY {first_str_column} ASC;"
+            connection.execute(fetch_query)
+
     #Nan cleaning ------------------
-    if mutation == "Modular clearance" and len(input) > 0:
+    elif mutation == "Modular clearance" and len(input) > 0:
         assert (type(input) == list or type(input) == np.ndarray)
         if type(input) != list and type(input) == np.ndarray:
             input = [element for element in input.flat]
 
         post_cleaning_output = ice_wall(input, type_accpeted)
         return post_cleaning_output
-        #Database anomaly clearing
-        if mutation == "Anomaly handler":
+    #Database anomaly clearing
+    elif mutation == "Anomaly handler":
         cur = connection.cursor()
         clear_to_process = 0
         if table_name != None and column_names != None and schema != None:
@@ -82,8 +112,8 @@ def black_wall_protocol_EX102(connection, input, mutation, dates, column_names, 
 
         if clear_to_process == 1:
             try:
-                # Winning number:
-                experimentation_method = 1
+                # Winning number: 2
+                experimentation_method = 0
                 # Set the database isolation level
                 level_selected = 1
                 # Isolation protocols
@@ -123,7 +153,7 @@ def black_wall_protocol_EX102(connection, input, mutation, dates, column_names, 
     # Data
     #If there is machine learning then add pre-processing protocols here
     #ML preprocessing ------------------
-    if mutation == "ML preprocessing" and len(input) > 0:
+    elif mutation == "ML preprocessing" and len(input) > 0:
         assert (type(input) == list or type(input) == np.ndarray)
         if type(input) != np.ndarray:
             input = np.array(input)
