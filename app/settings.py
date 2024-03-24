@@ -45,7 +45,7 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "game_hub",
     "djmoney",
-    'livereload',
+    "livereload",
 ]
 
 MIDDLEWARE = [
@@ -99,11 +99,11 @@ DATABASES = {
 
 import sys
 
-if 'test' in sys.argv:
+if "test" in sys.argv:
     DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.sqlite3',
-            'NAME': ':memory:',
+        "default": {
+            "ENGINE": "django.db.backends.sqlite3",
+            "NAME": ":memory:",
         }
     }
 

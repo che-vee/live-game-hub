@@ -9,7 +9,7 @@ def streamer_purchase_game(request, streamer_id, gametype_id, source='spend of m
     game_type = GameType.objects.get(pk=gametype_id)
     game_price = game_type.price
 
-    if streamer.balance_amount < game_type.price:
+    if streamer.balance < game_type.price:
         raise ValueError("Insufficient balance")
 
     payment = Payment.objects.create(
@@ -26,14 +26,14 @@ def streamer_purchase_game(request, streamer_id, gametype_id, source='spend of m
         # payment_id=payment.id
     )
 
-    streamer.balance_amount -= game_price
+    streamer.balance -= game_price
     streamer.save()
 
 @transaction.atomic
 def update_streamer_balance(streamer_id, new_balance):
     streamer = Streamer.objects.select_for_update().get(pk=streamer_id)
-    currency = streamer.balance_currency if streamer.balance else 'USD'
-    streamer.balance_amount = Money(new_balance, currency)
+    currency = streamer.balance.currency
+    streamer.balance = Money(new_balance, currency)
     streamer.save()
 
 

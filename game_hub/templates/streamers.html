@@ -18,7 +18,7 @@
                     <td>{{ streamer.id }}</td>
                     <td>{{ streamer.username }}</td>
                     <td>{{ streamer.email }}</td>
-                    <td>{{ streamer.balance_amount }}</td>
+                    <td>{{ streamer.balance }}</td>
                     <td>
                         <form action="{% url 'update_balance' %}" method="post">
                             {% csrf_token %}
