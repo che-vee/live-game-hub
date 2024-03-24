@@ -3,7 +3,7 @@ from datetime import timedelta, datetime
 import random
 import psycopg2
 import psycopg2.extensions
-from Black_wall_EX102 import black_wall_protocol_EX102
+from scripts.Black_wall_EX102 import black_wall_protocol_EX102
 
 def synthetic_test_data_generator_GEN3(data_type, count):
     results = []
