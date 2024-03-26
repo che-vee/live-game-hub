@@ -48,6 +48,8 @@ INSTALLED_APPS = [
     "livereload",
 ]
 
+# Black wall middleware
+# "game_hub.middlewares.BlackWallEX110"
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
