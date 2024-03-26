@@ -6,22 +6,7 @@ from concurrent.futures import ThreadPoolExecutor, as_completed
 from sqlalchemy.testing.exclusions import closed
 
 def black_wall_protocols(connection, input, mutation, dates, column_names, table_name, schema, type_accpeted):
-    def execute_query(connection_params, query):
-        assert(type(query) == str)
-        conn = None
-        try:
-            conn = psycopg2.connect(**connection_params).cursor()
-            conn.execute(query)
-            results = cur.fetchall()
-            cur.close()
-            return results
-        except Exception as e:
-            print(f"An error occurred: {e}")
-            return []
-        finally:
-            if conn is not closed:
-                conn.close()
-
+    
     def ice_wall(input, type_accepted):
         assert(type(input) == list or type(input) == np.ndarray)
         accpeted_types = [bool, str, int, float]
