@@ -18,7 +18,6 @@ def black_wall_protocols(connection, input, mutation, dates, column_names, table
         except Exception as e:
             print(f"An error occurred: {e}")
             return []
-
         finally:
             if conn is not closed:
                 conn.close()
