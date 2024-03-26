@@ -104,8 +104,8 @@ def black_wall_protocols(connection, input, mutation, dates, column_names, table
 
         if clear_to_process == 1:
             try:
+                # Winner details: Batch processing was applied
                 # Winning number: 2
-                experimentation_method = 1
                 # Set the database isolation level
                 level_selected = 1
                 # Isolation protocols
@@ -115,30 +115,10 @@ def black_wall_protocols(connection, input, mutation, dates, column_names, table
 
                 isolation_level = protocols[level_selected]
                 connection.set_isolation_level(isolation_level)
-                if experimentation_method == 0:
-                    for column in column_names:
-                        cur.execute(f"SELECT {column} FROM {schema}.{table_name};")
-                elif experimentation_method == 1:
-                    columns = ', '.join(column_names)
-                    query = f"SELECT {columns} FROM {schema}.{table_name};"
-                    cur.execute(query)
-                elif experimentation_method == 2:
-                    queries = [f"SELECT {column} FROM {schema}.{table_name};" for column in
-                               column_names]  # List of queries
 
-                    # Use ThreadPoolExecutor to execute queries in parallel
-                    with ThreadPoolExecutor(max_workers=len(queries)) as executor:
-                        future_to_query = {executor.submit(execute_query, connection, query): query for query in
-                                           queries}
-
-                        for future in as_completed(future_to_query):
-                            query = future_to_query[future]
-                            try:
-                                data = future.result()
-
-                            except Exception as exc:
-                                print(f'{query} generated an exception: {exc}')
-
+                columns = ', '.join(column_names)
+                query = f"SELECT {columns} FROM {schema}.{table_name};"
+                cur.execute(query)
             except:
                 # Rollback in the event of failure
                 connection.rollback()
