@@ -123,8 +123,8 @@ def black_wall_protocols(connection, input, mutation, dates, column_names, table
                 # Rollback in the event of failure
                 connection.rollback()
             finally:
-            if conn is not closed:
-                conn.close()
+                if connection is not closed:
+                    connection.close()
     # Data
     #If there is machine learning then add pre-processing protocols here
     #ML preprocessing ------------------
