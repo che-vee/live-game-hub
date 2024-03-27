@@ -107,6 +107,12 @@ if "test" in sys.argv:
         }
     }
 
+from mongoengine import connect
+
+MONGO_DB_URI = env("MONGO_DB_URI")
+DATABASE_NAME = "gamingplatform"
+
+connect(db=DATABASE_NAME, host=MONGO_DB_URI)
 
 # Password validation
 # https://docs.djangoproject.com/en/5.0/ref/settings/#auth-password-validators
