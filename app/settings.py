@@ -107,6 +107,21 @@ if "test" in sys.argv:
         }
     }
 
+from mongoengine import connect
+
+MONGO_DB_URI = env("MONGO_DB_URI")
+DATABASE_NAME = "gamingplatform"
+
+connect(db=DATABASE_NAME, host=MONGO_DB_URI)
+
+SNOWFLAKE_CONNECTION_PARAMS = {
+    "user": env("SNOWFLAKE_USER"),
+    "password": env("SNOWFLAKE_PASSWORD"),
+    "account": env("SNOWFLAKE_ACCOUNT"),
+    "warehouse": env("SNOWFLAKE_WAREHOUSE"),
+    "database": env("SNOWFLAKE_DATABASE"),
+    "schema": env("SNOWFLAKE_SCHEMA"),
+}
 
 # Password validation
 # https://docs.djangoproject.com/en/5.0/ref/settings/#auth-password-validators
