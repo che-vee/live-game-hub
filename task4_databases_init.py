@@ -1,8 +1,3 @@
-#pip install snowflake-connector-python 
-#pip install snowflake
-#pip install pymongo
-
-# import snowflake.snowpark as snowpark
 import warnings, sys, os
 import pandas as pd
 import numpy as np
@@ -10,8 +5,6 @@ import random
 from decimal import Decimal
 from datetime import datetime, timedelta
 import json
-# import snowflake.connector
-# from snowflake.snowpark.functions import col
 import pymongo
 import csv
 import psycopg2
@@ -19,6 +12,8 @@ from psycopg2 import sql
 from psycopg2.extras import execute_values
 import django
 from game_hub.mongo_models import Session, Game, GameType
+import snowflake.connector as connector
+from django.conf import settings
 
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "app.settings")
 django.setup()
@@ -234,7 +229,6 @@ def postgres_task():
     mongo_task(p_conn)
 
 # MONGO
-
 def set_docs(p_conn):
     p_cur = p_conn.cursor()
 
@@ -278,63 +272,61 @@ def set_docs(p_conn):
     p_conn.close()
     
 def get_docs():
-    for session in Session.objects:
-        print(session)
+    return Session.objects
 
 def mongo_task(p_conn):
-    # set_docs(p_conn)  # recreate documents
-    get_docs()
-
+    # set_docs(p_conn)
+    data = get_docs()
+    for session in data:
+        print(session)
 
 
 # SNOWFLAKE
-def snowflake_task():
-    snow_con = snowflake.connector.connect(user='student',password='HSUnivSFTests970',
-    account='GKB48589',warehouse='COMPUTE_XS',database='SF_SAMPLE',ocsp_fail_open=False)
-    snow_cursor = snow_con.cursor()
+def get_snowflake_connection():
+    return connector.connect(
+        user=settings.SNOWFLAKE_CONNECTION_PARAMS["user"],
+        password=settings.SNOWFLAKE_CONNECTION_PARAMS["password"],
+        account=settings.SNOWFLAKE_CONNECTION_PARAMS["account"],
+        warehouse=settings.SNOWFLAKE_CONNECTION_PARAMS["warehouse"],
+        database=settings.SNOWFLAKE_CONNECTION_PARAMS["database"],
+        schema=settings.SNOWFLAKE_CONNECTION_PARAMS["schema"],
+        ocsp_fail_open=False,
+    )
+    
+def sf_ddl(sf_conn):
+    snow_cur = sf_conn.cursor()
 
-    schema = 'GAMINGPLATFORM'
-    sf_stage = '@~'
-    snow_curs.execute(f"USE SCHEMA SF_SAMPLE.{schema}")
+    snow_cur.execute(f"DROP TABLE IF EXISTS injestion_session")
+    snow_cur.execute(f"DROP TABLE IF EXISTS sample_session")
 
-    snow_cursor.execute(f"SHOW TABLES IN SCHEMA SF_SAMPLE.{schema}")
-
-    rows = snow_cursor.fetchall()
-    table_names = [row[1] for row in rows]
-    print(f"List of tables in schema '{schema}':")
-    for table in table_names:
-        print(table)
-
-    snow_curs.execute("""
-    CREATE TABLE IF NOT EXISTS SF_SAMPLE.GAMINGPLATFORM.SESSION (
-    PlayerID INT,
-    GameID INT,
-    StartTime DATETIME,
-    EndTime DATETIME
-    );
+    snow_cur.execute("""
+        CREATE TABLE IF NOT EXISTS injestion_session (
+            data variant
+        );
     """)
 
-    copy_into_cmd = f"""
-    COPY INTO SF_SAMPLE.GAMINGPLATFORM.SESSION
-    FROM {sf_stage}/{csv_file_name}.gz
-    FILE_FORMAT = (TYPE = 'CSV' FIELD_OPTIONALLY_ENCLOSED_BY = '"' SKIP_HEADER = 1);
-    """
+    snow_cur.execute("""
+        CREATE TABLE IF NOT EXISTS sample_session (
+            processing_time datetime,
+            source_model varchar(256), 
+            data variant
+        );
+    """)
 
-    snow_curs.execute(copy_into_cmd).fetchall()
+    snow_cur.close()
 
-    snow_curs.execute('select * from "SF_SAMPLE"."GAMINGPLATFORM"."SESSION"')
-    f_curs = snow_curs.fetchall()
-    features = {}
-    for r in f_curs:
-        print(r)
+def snowflake_task():
+    sf_conn = get_snowflake_connection()
 
-    snow_cursor.close()
-    snow_con.close()
+    # sf_ddl(sf_conn) # create tables
+
+
+    sf_conn.close()
 
 
 def main():
-    postgres_task()
-    #  snowflake_task()
+    # postgres_task()
+     snowflake_task()
 
 
 main()
