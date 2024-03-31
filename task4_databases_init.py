@@ -318,7 +318,7 @@ def sf_ddl(sf_conn):
 def snowflake_task():
     sf_conn = get_snowflake_connection()
 
-    # sf_ddl(sf_conn) # create tables
+    sf_ddl(sf_conn) # create tables
 
 
     sf_conn.close()
@@ -326,7 +326,7 @@ def snowflake_task():
 
 def main():
     # postgres_task()
-     snowflake_task()
+    snowflake_task()
 
 
 main()

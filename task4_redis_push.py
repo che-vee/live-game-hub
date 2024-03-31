@@ -22,13 +22,15 @@ def main():
         while is_ok:
             curr_id = redis_client.get('session_counter')
             curr_id = int(curr_id.decode())
-            print(curr_id)
+
             if data[curr_id] is not None:
                 data_to_push = data[curr_id].to_json()
                 redis_client.lpush('sessions_list', data_to_push)
             else:
                 is_ok = False
 
+            print(f'{curr_id}: push success.')
+            
             redis_client.incr('session_counter')
             time.sleep(1)
 
