@@ -1,5 +1,6 @@
 from mongoengine import (
     Document,
+    IntField,
     StringField,
     EmailField,
     FloatField,
@@ -50,3 +51,36 @@ class ViewerPurchase(Document):
     game_id = StringField()
     created_at = DateTimeField(required=True, default=timezone.now)
     updated_at = DateTimeField(default=timezone.now)
+
+
+class GameType(EmbeddedDocument):
+    genre = StringField(max_length=255, required=True)
+    price = FloatField(required=True)
+    created_at = DateTimeField(default=timezone.now)
+    updated_at = DateTimeField(default=timezone.now)
+
+class Game(EmbeddedDocument):
+    name = StringField(max_length=255, required=True)
+    description = StringField()
+    gametype = EmbeddedDocumentField(GameType, required=True)
+    created_at = DateTimeField(default=timezone.now)
+    updated_at = DateTimeField(default=timezone.now)
+
+class Session(Document):
+    streamer_id = IntField(required=True)
+    game = EmbeddedDocumentField(Game, required=True)
+    duration = IntField() 
+    score = IntField()
+    status = StringField(max_length=20)
+    game_mode = StringField(max_length=20)
+    platform = StringField(max_length=20)
+    session_events = StringField()
+    session_metadata = StringField()
+    start_time = DateTimeField(default=timezone.now)
+    end_time = DateTimeField(default=timezone.now)
+
+    def __str__(self):
+        return (f"Session(streamer_id={self.streamer_id}, game={self.game}, duration={self.duration}, "
+                f"score={self.score}, status={self.status}, game_mode={self.game_mode}, platform={self.platform}, "
+                f"session_events={self.session_events}, session_metadata={self.session_metadata}, "
+                f"start_time={self.start_time}, end_time={self.end_time})")
